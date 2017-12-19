@@ -3,47 +3,59 @@
 type Cursor = {
   start: number,
   end: number
-}
+};
 export type PhoneInputType = {
   phoneNumber: string,
   cursorPosition: number
-}
+};
 const formatPhoneInput = ({ phoneNumber, cursorPosition }) => {
   return {
     phoneNumber: format(phoneNumber),
     cursorPosition
-  }
-}
-
-export const update = (phoneNumber: string, cursor: Cursor, key: string): PhoneInputType => {
-  if (key === "Backspace") {
-    const phoneInput = backspace(phoneNumber, cursor)
-    return formatPhoneInput(phoneInput)
-  }
-  if (isInsertable(phoneNumber, key)) {
-    const phoneInput = insert(phoneNumber, cursor, key);
-    return formatPhoneInput(phoneInput)
-  }
-  const phoneInput = { phoneNumber, cursorPosition: cursor.start}
-  return formatPhoneInput(phoneInput)
+  };
 };
 
-const isInsertable = (phoneNumber, key) => {
-  if (normalize(phoneNumber).length === 10) {
-  return false
+export const update = (
+  phoneNumber: string,
+  cursor: Cursor,
+  key: string
+): PhoneInputType => {
+  const _isSelection = isSelection(cursor);
+
+  if (key === "Backspace") {
+    const phoneInput = backspace(phoneNumber, cursor);
+    return formatPhoneInput(phoneInput);
   }
-  if(/[^0-9]/.test(key)) {
-    return false
+  if (isInsertable(phoneNumber, key, _isSelection)) {
+    const phoneInput = insert(phoneNumber, cursor, key);
+    return formatPhoneInput(phoneInput);
+  }
+  const phoneInput = { phoneNumber, cursorPosition: cursor.start };
+  return formatPhoneInput(phoneInput);
+};
+
+export const isInvalidKey = (key: string) => {
+  if (key === "Backspace") {
+    return false;
   }
   if (/[0-9]/.test(key)) {
-    return true
+    return false;
   }
-  return false
-}
+  return true;
+};
+const isInsertable = (phoneNumber, key, isSelection) => {
+  if (normalize(phoneNumber).length === 10 && !isSelection) {
+    return false;
+  }
+  return !isInvalidKey(key);
+};
 
 const isSelection = ({ start, end }) => start !== end;
 
-export const backspace = (phoneNumber: string, cursor: Cursor): PhoneInputType => {
+export const backspace = (
+  phoneNumber: string,
+  cursor: Cursor
+): PhoneInputType => {
   const { start, end } = cursor;
   let newCursorPosition = start;
   let newPhoneNumber = phoneNumber;
@@ -58,6 +70,15 @@ export const backspace = (phoneNumber: string, cursor: Cursor): PhoneInputType =
       // concat string and return
       newPhoneNumber =
         phoneNumber.substring(0, start - 1) + phoneNumber.substring(start);
+
+      let diff = format(phoneNumber).length - format(newPhoneNumber).length;
+      console.log(diff);
+      if (diff > 1) {
+        newCursorPosition -= diff - 2;
+        if (newCursorPosition < 0) {
+          newCursorPosition = 0;
+        }
+      }
     }
   }
 
@@ -71,19 +92,30 @@ export const backspace = (phoneNumber: string, cursor: Cursor): PhoneInputType =
     // concat beginning / cursorEnd string
     newPhoneNumber =
       phoneNumber.substring(0, start) + selection + phoneNumber.substring(end);
-    // set cursor position to whatever it was before
+  }
+  let diff = format(phoneNumber).length - format(newPhoneNumber).length;
+  console.log(diff);
+  if (diff > 1) {
+    newCursorPosition -= diff - 2;
+    if (newCursorPosition < 0) {
+      newCursorPosition = 0;
+    }
   }
   return {
     phoneNumber: newPhoneNumber,
     cursorPosition: newCursorPosition
-  }
+  };
 };
 
-export const insert = (phoneNumber: string, cursor: Cursor, key: string): PhoneInputType => {
+export const insert = (
+  phoneNumber: string,
+  cursor: Cursor,
+  key: string
+): PhoneInputType => {
   const { start, end } = cursor;
 
   let newPhoneNumber = phoneNumber;
-  let diff = 1
+  let diff = 1;
 
   // if selection
   if (isSelection(cursor)) {
@@ -93,12 +125,12 @@ export const insert = (phoneNumber: string, cursor: Cursor, key: string): PhoneI
   if (!isSelection(cursor)) {
     // concat string before start, key, string after start
     newPhoneNumber = insertChars(phoneNumber, key, start, end);
-    diff = format(newPhoneNumber).length - format(phoneNumber).length
+    diff = format(newPhoneNumber).length - format(phoneNumber).length;
   }
 
   return {
     phoneNumber: newPhoneNumber,
-    cursorPosition: start + diff 
+    cursorPosition: start + diff
   };
 };
 
@@ -106,11 +138,15 @@ export const normalize = (phoneNumber: string) => {
   return phoneNumber.replace(/\D/g, "");
 };
 
-export const insertChars = (string: string, char: string, start: number, end: number) =>
-  string.substring(0, start) + char + string.substring(end);
+export const insertChars = (
+  string: string,
+  char: string,
+  start: number,
+  end: number
+) => string.substring(0, start) + char + string.substring(end);
 
 export const format = (rawPhoneNumber: string) => {
-  const phoneNumber = normalize(rawPhoneNumber)
+  const phoneNumber = normalize(rawPhoneNumber);
 
   const partA = phoneNumber.substring(0, 3);
   const partB = phoneNumber.substring(3, 6);

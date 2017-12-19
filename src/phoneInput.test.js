@@ -67,6 +67,7 @@ describe("backspace", () => {
 
     expect(backspace(fullPhone, cursor)).toEqual(expected);
   });
+
   test("it doesnt remove any characters from an all non-numeric selection", () => {
     const cursor = { start: 4, end: 6 };
     const expected = {
@@ -75,6 +76,16 @@ describe("backspace", () => {
     };
 
     expect(backspace(fullPhone, cursor)).toEqual(expected);
+  });
+
+  test("it sets the cursor at the correct position when the phone number changes dramatically after formatting", () => {
+    const phoneNumber = "(123) 456-7";
+    const cursor = { start: 7, end: 7 };
+    const expected = {
+      phoneNumber: "(123) 56-7",
+      cursorPosition: 4
+    };
+    expect(backspace(phoneNumber, cursor)).toEqual(expected);
   });
 });
 
@@ -101,6 +112,15 @@ describe("insert", () => {
     };
     expect(insert(phone, cursor, key)).toEqual(expected);
   });
+  test("replaces the selection with the number when the entire number is selected", () => {
+    const cursor = { start: 0, end: 14 };
+    const key = "2";
+    const expected = {
+      phoneNumber: "2",
+      cursorPosition: 1
+    };
+    expect(insert(fullPhone, cursor, key)).toEqual(expected);
+  });
 });
 
 describe("normalize", () => {
@@ -113,12 +133,12 @@ describe("normalize", () => {
 
 describe("update", () => {
   test("returns phone number unchanged when there are already 10 digits", () => {
-    const cursor = { start: 1, end: 1 }
-    const key = "3"
+    const cursor = { start: 1, end: 1 };
+    const key = "3";
     const expected = {
       phoneNumber: fullPhone,
       cursorPosition: 1
-    }
+    };
     expect(update(fullPhone, cursor, key)).toEqual(expected);
   });
 
@@ -128,9 +148,18 @@ describe("update", () => {
     const expected = {
       phoneNumber: "(132) 312-31",
       cursorPosition: 2
-    }
-    
+    };
 
     expect(update(phone, cursor, "3")).toEqual(expected);
+  });
+  test("it sets the cursor at the correct position when the phone number changes dramatically after formatting", () => {
+    const phoneNumber = "(123) 456-7";
+    const cursor = { start: 7, end: 7 };
+    const expected = {
+      phoneNumber: "123-567",
+      cursorPosition: 4
+    };
+
+    expect(update(phoneNumber, cursor, "Backspace")).toEqual(expected);
   });
 });
