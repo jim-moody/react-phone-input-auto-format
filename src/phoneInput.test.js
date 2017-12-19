@@ -1,4 +1,4 @@
-import { backspace, insert, normalize, update } from "./phoneInput";
+import { backspace, insert, normalize, update, format } from "./phoneInput";
 
 const fullPhone = "(123) 456-7890";
 
@@ -113,12 +113,24 @@ describe("normalize", () => {
 
 describe("update", () => {
   test("returns phone number unchanged when there are already 10 digits", () => {
-    expect(update(fullPhone)).toBe(fullPhone);
+    const cursor = { start: 1, end: 1 }
+    const key = "3"
+    const expected = {
+      phoneNumber: fullPhone,
+      cursorPosition: 1
+    }
+    expect(update(fullPhone, cursor, key)).toEqual(expected);
   });
+
   test("calls insert function when a number is entered", () => {
     const phone = "1231231";
     const cursor = { start: 1, end: 1 };
+    const expected = {
+      phoneNumber: "(132) 312-31",
+      cursorPosition: 2
+    }
+    
 
-    expect(update(phone, cursor, "3")).toEqual(insert(phone, cursor, "3"));
+    expect(update(phone, cursor, "3")).toEqual(expected);
   });
 });

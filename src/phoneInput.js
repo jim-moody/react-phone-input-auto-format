@@ -8,29 +8,39 @@ export type PhoneInputType = {
   phoneNumber: string,
   cursorPosition: number
 }
-export const update = (prevPhoneNumber: string, cursor: Cursor, key: string) => {
+const formatPhoneInput = ({ phoneNumber, cursorPosition }) => {
+  return {
+    phoneNumber: format(phoneNumber),
+    cursorPosition
+  }
+}
+
+export const update = (phoneNumber: string, cursor: Cursor, key: string): PhoneInputType => {
   if (key === "Backspace") {
-    return backspace(prevPhoneNumber, cursor);
+    const phoneInput = backspace(phoneNumber, cursor)
+    return formatPhoneInput(phoneInput)
   }
-  if (isInvalidInsert(prevPhoneNumber, key)) {
-    return {
-      phoneNumber: prevPhoneNumber,
-      cursorPosition: cursor.start
-    }
+  if (isInsertable(phoneNumber, key)) {
+    const phoneInput = insert(phoneNumber, cursor, key);
+    return formatPhoneInput(phoneInput)
   }
-  if (/[0-9]/.test(key)) {
-    return insert(prevPhoneNumber, cursor, key);
-  }
+  const phoneInput = { phoneNumber, cursorPosition: cursor.start}
+  return formatPhoneInput(phoneInput)
 };
-const isInvalidInsert = (phoneNumber, key) => {
+
+const isInsertable = (phoneNumber, key) => {
   if (normalize(phoneNumber).length === 10) {
-    return true
+  return false
   }
   if(/[^0-9]/.test(key)) {
+    return false
+  }
+  if (/[0-9]/.test(key)) {
     return true
   }
   return false
 }
+
 const isSelection = ({ start, end }) => start !== end;
 
 export const backspace = (phoneNumber: string, cursor: Cursor): PhoneInputType => {
@@ -63,18 +73,17 @@ export const backspace = (phoneNumber: string, cursor: Cursor): PhoneInputType =
       phoneNumber.substring(0, start) + selection + phoneNumber.substring(end);
     // set cursor position to whatever it was before
   }
-
   return {
     phoneNumber: newPhoneNumber,
     cursorPosition: newCursorPosition
-  };
+  }
 };
 
 export const insert = (phoneNumber: string, cursor: Cursor, key: string): PhoneInputType => {
   const { start, end } = cursor;
 
   let newPhoneNumber = phoneNumber;
-  let newCursorPosition = start + 1;
+  let diff = 1
 
   // if selection
   if (isSelection(cursor)) {
@@ -84,11 +93,12 @@ export const insert = (phoneNumber: string, cursor: Cursor, key: string): PhoneI
   if (!isSelection(cursor)) {
     // concat string before start, key, string after start
     newPhoneNumber = insertChars(phoneNumber, key, start, end);
+    diff = format(newPhoneNumber).length - format(phoneNumber).length
   }
 
   return {
     phoneNumber: newPhoneNumber,
-    cursorPosition: newCursorPosition
+    cursorPosition: start + diff 
   };
 };
 
@@ -99,7 +109,9 @@ export const normalize = (phoneNumber: string) => {
 export const insertChars = (string: string, char: string, start: number, end: number) =>
   string.substring(0, start) + char + string.substring(end);
 
-export const format = (phoneNumber: string) => {
+export const format = (rawPhoneNumber: string) => {
+  const phoneNumber = normalize(rawPhoneNumber)
+
   const partA = phoneNumber.substring(0, 3);
   const partB = phoneNumber.substring(3, 6);
   const partC = phoneNumber.substring(6, 11);
