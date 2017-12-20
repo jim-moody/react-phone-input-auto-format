@@ -80,11 +80,10 @@ class StyledInput extends Component {
     valid: false
   };
   handleOnChange = event => {
-    if (event.target.value.length > 0) {
-      this.setState({
-        valid: true
-      });
-    }
+    const valid = event.target.value.length > 0;
+    this.setState({
+      valid
+    });
   };
   render() {
     const { InputComponent } = this.props;
