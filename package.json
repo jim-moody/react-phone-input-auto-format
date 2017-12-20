@@ -2,11 +2,11 @@
   "name": "react-phone-input-auto-format",
   "version": "0.0.1",
   "description": "Auto formatting phone input React component, US only",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
     "test": "jest",
     "flow": "flow",
-    "build": "npm run test && webpack",
+    "build": "webpack",
     "lint": "eslint ./src",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"

@@ -5,7 +5,7 @@ import {
   update,
   format,
   getCursorOnBackspace
-} from "./phoneInput";
+} from "../src/phoneInput";
 
 const fullPhone = "(123) 456-7890";
 

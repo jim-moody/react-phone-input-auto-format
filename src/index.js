@@ -1,17 +1,17 @@
 // @flow
-import React, { Component } from "react";
+import * as React from "react";
 import type { PhoneInputType } from "./phoneInput";
 import { update, isInvalidKey } from "./phoneInput";
 type Props = {
   label: string,
-  styledComponent: Component
+  componentWrapper: React.ComponentType<any>
 };
 
 type State = PhoneInputType & {
   key: string
 };
 
-class PhoneInput extends Component<Props, State> {
+class PhoneInput extends React.Component<Props, State> {
   textInput: ?HTMLInputElement;
 
   state = {
@@ -21,17 +21,20 @@ class PhoneInput extends Component<Props, State> {
   };
 
   handleKeyDown = (event: SyntheticKeyboardEvent<HTMLInputElement>) => {
-    const { key, currentTarget: { selectionStart, selectionEnd } } = event;
+    const {
+      key,
+      currentTarget: { selectionStart: start, selectionEnd: end }
+    } = event;
 
     if (isInvalidKey(key)) {
       return;
     }
-    const cursor = {
-      start: selectionStart,
-      end: selectionEnd
-    };
-    const { phoneNumber = "", cursorPosition = 0 } =
-      update(this.state.phoneNumber, cursor, key) || {};
+    const cursor = { start, end };
+    const { phoneNumber = "", cursorPosition = 0 } = update(
+      this.state.phoneNumber,
+      cursor,
+      key
+    );
 
     this.setState({
       phoneNumber,
@@ -52,20 +55,20 @@ class PhoneInput extends Component<Props, State> {
 
   render() {
     const { phoneNumber } = this.state;
-    const { styledComponent } = this.props;
+    const { componentWrapper: Input } = this.props;
 
-    const Input = styledComponent || React.createElement("input");
-    const refProp = styledComponent ? "innerRef" : "ref";
+    const refProp = Input ? "innerRef" : "ref";
 
     const props = {
       ...this.props,
+      // $FlowFixMe
       [refProp]: input => (this.textInput = input),
       type: "tel",
       value: phoneNumber,
       onKeyDown: this.handleKeyDown
     };
 
-    return <Input {...props} />;
+    return Input ? <Input {...props} /> : <input {...props} />;
   }
 }
 

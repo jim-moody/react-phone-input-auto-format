@@ -6,7 +6,7 @@ import { linkTo } from "@storybook/addon-links";
 
 import { Button, Welcome } from "@storybook/react/demo";
 import PhoneInput from "../src";
-import StyledInput from "../src/styledInput";
+import StyledInput from "../demo/styledInput";
 
 storiesOf("Welcome", module).add("to Storybook", () => (
   <Welcome showApp={linkTo("Button")} />
@@ -19,6 +19,6 @@ storiesOf("Button", module)
   .add("with some emoji", () => (
     <Button onClick={action("clicked")}>😀 😎 👍 💯</Button>
   ));
-storiesOf("StyledInput", module).add("standard", () => (
-  <StyledInput InputComponent={PhoneInput} />
-));
+storiesOf("PhoneInput", module)
+  .add("with styled wrapper", () => <StyledInput InputComponent={PhoneInput} />)
+  .add("no wrapper", () => <PhoneInput />);

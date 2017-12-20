@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import styled from "styled-components";
-import PhoneInput from "./";
+import PhoneInput from "../src";
 const primaryColor = "#578ff8";
 
 const Group = styled.div`
@@ -93,7 +93,7 @@ class StyledInput extends Component {
         {InputComponent ? (
           <InputComponent
             onChange={this.handleOnChange}
-            styledComponent={Input}
+            componentWrapper={Input}
           />
         ) : (
           <Input />
