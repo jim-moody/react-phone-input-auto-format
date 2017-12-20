@@ -79,24 +79,17 @@ class StyledInput extends Component {
   state = {
     valid: false
   };
-  handleOnChange = event => {
-    const valid = event.target.value.length > 0;
+  handleOnChange = value => {
+    const valid = value > 0;
     this.setState({
       valid
     });
   };
   render() {
-    const { InputComponent } = this.props;
+    const { render } = this.props;
     return (
       <Group>
-        {InputComponent ? (
-          <InputComponent
-            onChange={this.handleOnChange}
-            componentWrapper={Input}
-          />
-        ) : (
-          <Input />
-        )}
+        {render({ onChange: this.handleOnChange, componentWrapper: Input })}
         <Bar />
         <Label valid={this.state.valid}>Phone Number</Label>
       </Group>

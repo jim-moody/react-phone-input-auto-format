@@ -41,6 +41,7 @@ class PhoneInput extends React.Component<Props, State> {
       cursorPosition,
       key
     });
+    this.props.onChange(phoneNumber);
   };
 
   componentDidUpdate() {
@@ -58,7 +59,6 @@ class PhoneInput extends React.Component<Props, State> {
     const { componentWrapper: Input } = this.props;
 
     const refProp = Input ? "innerRef" : "ref";
-
     const props = {
       ...this.props,
       // $FlowFixMe
@@ -68,7 +68,11 @@ class PhoneInput extends React.Component<Props, State> {
       onKeyDown: this.handleKeyDown
     };
 
-    return Input ? <Input {...props} /> : <input {...props} />;
+    return Input ? (
+      <Input {...props} onChange={() => {}} />
+    ) : (
+      <input {...props} />
+    );
   }
 }
 
