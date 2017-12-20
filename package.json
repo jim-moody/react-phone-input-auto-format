@@ -9,7 +9,8 @@
     "build": "webpack",
     "lint": "eslint ./src",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "deploy-storybook": "storybook-to-ghpages"
   },
   "author": "Jim Moody <jimsmoody@gmail.com>",
   "license": "ISC",
@@ -17,6 +18,7 @@
     "@storybook/addon-actions": "^3.2.17",
     "@storybook/addon-links": "^3.2.17",
     "@storybook/react": "^3.2.17",
+    "@storybook/storybook-deployer": "^2.2.0",
     "babel-cli": "^6.26.0",
     "babel-eslint": "^8.0.3",
     "babel-plugin-transform-class-properties": "^6.24.1",
