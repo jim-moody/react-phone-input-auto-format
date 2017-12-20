@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from "react";
 import styled from "styled-components";
 import PhoneInput from "./";
 const primaryColor = "#578ff8";
@@ -75,15 +75,35 @@ const Label = styled.label`
   ${({ valid }) => valid && labelFocusStyle};
 `;
 
-const StyledInput = ({ InputComponent }) => {
-  return (
-    <Group>
-      {InputComponent ? <InputComponent styledComponent={Input} /> : <Input />}
-      <Bar />
-      <Label>Phone Number</Label>
-    </Group>
-  );
-};
+class StyledInput extends Component {
+  state = {
+    valid: false
+  };
+  handleOnChange = event => {
+    if (event.target.value.length > 0) {
+      this.setState({
+        valid: true
+      });
+    }
+  };
+  render() {
+    const { InputComponent } = this.props;
+    return (
+      <Group>
+        {InputComponent ? (
+          <InputComponent
+            onChange={this.handleOnChange}
+            styledComponent={Input}
+          />
+        ) : (
+          <Input />
+        )}
+        <Bar />
+        <Label valid={this.state.valid}>Phone Number</Label>
+      </Group>
+    );
+  }
+}
 
 StyledInput.defaultProps = {
   valid: false,

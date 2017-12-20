@@ -1,4 +1,11 @@
-import { backspace, insert, normalize, update, format } from "./phoneInput";
+import {
+  backspace,
+  insert,
+  normalize,
+  update,
+  format,
+  getCursorOnBackspace
+} from "./phoneInput";
 
 const fullPhone = "(123) 456-7890";
 
@@ -161,5 +168,20 @@ describe("update", () => {
     };
 
     expect(update(phoneNumber, cursor, "Backspace")).toEqual(expected);
+  });
+});
+
+describe("getCursorOnBackspace", () => {
+  test("returns correct cursor position when formatting changes length", () => {
+    const phone1 = "(123) 456-7";
+    const phone2 = "123-567";
+    const cursor = 7;
+
+    expect(getCursorOnBackspace(phone1.length, phone2.length, cursor)).toBe(4);
+  });
+  test("returns correct cursor position when formatting changes length and is a selection", () => {
+    const phone1 = "(123) 456-7";
+    const phone2 = "123-567";
+    const cursor = 7;
   });
 });
