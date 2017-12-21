@@ -1,7 +1,11 @@
 {
   "name": "react-phone-input-auto-format",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Auto formatting phone input React component, US only",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jim-moody/react-phone-input-auto-format"
+  },
   "main": "lib/index.js",
   "scripts": {
     "test": "jest",
@@ -14,6 +18,8 @@
   },
   "author": "Jim Moody <jimsmoody@gmail.com>",
   "license": "ISC",
+  "homepage": "https://github.com/jim-moody/react-phone-input-auto-format",
+  "bugs": "https://github.com/jim-moody/react-phone-input-auto-format/issues",
   "devDependencies": {
     "@storybook/addon-actions": "^3.2.17",
     "@storybook/addon-links": "^3.2.17",
@@ -21,6 +27,7 @@
     "@storybook/storybook-deployer": "^2.2.0",
     "babel-cli": "^6.26.0",
     "babel-eslint": "^8.0.3",
+    "babel-minify-webpack-plugin": "^0.2.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.1",

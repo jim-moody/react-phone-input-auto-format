@@ -3,6 +3,9 @@ const BUILD_DIR = path.resolve(__dirname, "lib");
 const APP_DIR = path.resolve(__dirname, "src");
 module.exports = {
   entry: APP_DIR + "/index.js",
+  performance: {
+    hints: "warning"
+  },
   output: {
     filename: "index.js",
     path: BUILD_DIR,
@@ -17,6 +20,7 @@ module.exports = {
         use: {
           loader: "babel-loader",
           options: {
+            minified: true,
             presets: ["env", "react"],
             plugins: ["transform-class-properties"]
           }
