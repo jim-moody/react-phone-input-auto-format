@@ -1,44 +1,43 @@
 // @flow
+const INSERT = "insert";
+const BACKSPACE = "backspace";
 
 type Cursor = {
   start: number,
   end: number
 };
 
-export type PhoneInputType = {
+type PhoneInputType = {
   phoneNumber: string,
   cursorPosition: number
 };
-const INSERT = "insert";
-const BACKSPACE = "backspace";
 
 export const isInvalidKey = (key: string) => {
+  // we can let them backspace all day
   if (key === "Backspace") {
     return false;
   }
+  // any numeric digit is fine
   if (/[0-9]/.test(key)) {
     return false;
   }
+  // anything else defaults to native input handling
   return true;
 };
 const isInsertable = (phoneNumber, key, isSelection) => {
+  // we only allow 10 digits in this field because thats a full phone #
   if (normalize(phoneNumber).length === 10 && !isSelection) {
     return false;
   }
+  // cant insert if its not a valid key
   if (isInvalidKey(key)) {
     return false;
   }
   return true;
 };
 
+// just checks to see if the user has selected the text or we are dealing with a single cursor
 const isSelection = ({ start, end }) => start !== end;
-
-const getPhoneInput = ({ phoneNumber, cursorPosition }) => {
-  return {
-    phoneNumber: format(phoneNumber),
-    cursorPosition
-  };
-};
 
 export const update = (
   phoneNumber: string,
@@ -48,16 +47,13 @@ export const update = (
   const _isSelection = isSelection(cursor);
 
   if (key === "Backspace") {
-    const phoneInput = backspace(phoneNumber, cursor);
-    // return phoneInput;
-    return getPhoneInput(phoneInput);
+    return backspace(phoneNumber, cursor);
   }
   if (isInsertable(phoneNumber, key, _isSelection)) {
-    const phoneInput = insert(phoneNumber, cursor, key);
-    return getPhoneInput(phoneInput);
+    return insert(phoneNumber, cursor, key);
   }
   const phoneInput = { phoneNumber, cursorPosition: cursor.start };
-  return getPhoneInput(phoneInput);
+  return phoneInput;
 };
 
 export const backspace = (
@@ -99,7 +95,7 @@ export const backspace = (
     BACKSPACE
   );
   return {
-    phoneNumber,
+    phoneNumber: format(phoneNumber),
     cursorPosition
   };
 };
@@ -131,7 +127,7 @@ export const insert = (
   );
 
   return {
-    phoneNumber,
+    phoneNumber: format(phoneNumber),
     cursorPosition
   };
 };
@@ -173,7 +169,26 @@ export const getCursorPosition = (
   }
   // if cursor was at the beginning, keep it at the beginning
   if (cursor.start === 0) {
-    return action === BACKSPACE ? 0 : 1;
+    if (action === BACKSPACE) {
+      return 0;
+    }
+    if (action === INSERT) {
+      return 1;
+    }
+  }
+  // if they are trying to delete a paren/hypen/space, just move the cursor to the left one
+  // unless its a selection, in which case keep cursor in place
+  if (action === BACKSPACE) {
+    let regEx = /[^0-9]/g;
+    if (
+      isSelection(cursor) &&
+      regEx.test(prevNumber.substring(cursor.start, cursor.end))
+    ) {
+      return cursor.start;
+    }
+    if (!isSelection(cursor) && regEx.test(prevNumber[cursor.start - 1])) {
+      return cursor.start - 1;
+    }
   }
   /*
   Here is where we get really tricky. In general, we always want to end up with the same count of numbers to the right of the cursor before/after. So how we do this is like this:
@@ -189,17 +204,17 @@ export const getCursorPosition = (
     ? numbersToRightOfCursor.length
     : 0;
 
+  const formattedNumber = format(newNumber);
   // Step 2
-  const trueDiff = getCharacterCountContainingNumberCount(
-    format(newNumber),
-    numberCount
-  );
+  const trueDiff = getCharCountFromEndWithNumbers(formattedNumber, numberCount);
 
   // Step 3
-  return format(newNumber).length - trueDiff;
+  return formattedNumber.length - trueDiff;
 };
 
-const getCharacterCountContainingNumberCount = (
+// returns the number of characters in total that contains the specified count of numbers in a string, working from the end to the front
+// see tests for more details
+export const getCharCountFromEndWithNumbers = (
   string: string,
   numberCount: number
 ): number => {
@@ -219,5 +234,8 @@ const getCharacterCountContainingNumberCount = (
     return acc + 1;
   }, 0);
 
+  if (numberCounter < numberCount) {
+    return 0;
+  }
   return position;
 };
