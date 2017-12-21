@@ -63,7 +63,7 @@ export default Form;
 
 ### With Utility Functions
 
-Also see the demo[demo]
+Also see the [demo](https://jim-moody.github.io/react-phone-input-auto-format) and [demo source](demo/utilityFunctions.js)
 
 ```js
 import React from "react";
