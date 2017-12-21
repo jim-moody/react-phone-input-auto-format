@@ -16,7 +16,7 @@ describe("<PhoneInput />", () => {
     const Input = styled.input`
       color: red;
     `;
-    const wrapper = shallow(<PhoneInput inputComponent={Input} />);
+    const wrapper = mount(<PhoneInput inputComponent={Input} />);
     expect(wrapper.find("input")).toHaveLength(1);
   });
 });
