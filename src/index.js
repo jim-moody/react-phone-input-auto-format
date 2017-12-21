@@ -1,31 +1,22 @@
-// @flow
-import * as React from "react";
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 import type { PhoneInputType } from "./phoneInput";
 import { update, isInvalidKey } from "./phoneInput";
-type Props = {
-  label: string,
-  componentWrapper: React.ComponentType<any>
-};
 
-type State = PhoneInputType & {
-  key: string
-};
-
-class PhoneInput extends React.Component<Props, State> {
-  textInput: ?HTMLInputElement;
-
+class PhoneInput extends Component {
   state = {
     phoneNumber: "",
     cursorPosition: 0,
     key: ""
   };
 
-  handleKeyDown = (event: SyntheticKeyboardEvent<HTMLInputElement>) => {
+  handleKeyDown = event => {
     const {
       key,
       currentTarget: { selectionStart: start, selectionEnd: end }
     } = event;
 
+    // no need to run through all the logic if its not a valid entry
     if (isInvalidKey(key)) {
       return;
     }
@@ -41,6 +32,8 @@ class PhoneInput extends React.Component<Props, State> {
       cursorPosition,
       key
     });
+    // manually send the onChange event because react inputs dont send them all the time
+    // https://stackoverflow.com/questions/42550341/react-trigger-onchange-if-input-value-is-changing-by-state
     this.props.onChange(phoneNumber);
   };
 
@@ -56,24 +49,32 @@ class PhoneInput extends React.Component<Props, State> {
 
   render() {
     const { phoneNumber } = this.state;
-    const { componentWrapper: Input } = this.props;
-
+    const { inputComponent: Input } = this.props;
     const refProp = Input ? "innerRef" : "ref";
+
     const props = {
       ...this.props,
-      // $FlowFixMe
       [refProp]: input => (this.textInput = input),
       type: "tel",
       value: phoneNumber,
-      onKeyDown: this.handleKeyDown
+      onKeyDown: this.handleKeyDown,
+      onChange: () => {}
     };
 
-    return Input ? (
-      <Input {...props} onChange={() => {}} />
-    ) : (
-      <input {...props} />
-    );
+    return Input ? <Input {...props} /> : <input {...props} />;
   }
 }
+
+PhoneInput.propTypes = {
+  inputComponent: PropTypes.oneOfType([
+    PropTypes.instanceOf(Component),
+    PropTypes.func
+  ]),
+  onChange: PropTypes.func
+};
+
+PhoneInput.defaultProps = {
+  onChange: () => {}
+};
 
 export default PhoneInput;
