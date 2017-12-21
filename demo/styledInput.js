@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import styled from "styled-components";
 import PhoneInput from "../src";
+import PropTypes from "prop-types";
 const primaryColor = "#578ff8";
 
 const Group = styled.div`
@@ -80,7 +81,7 @@ class StyledInput extends Component {
     valid: false
   };
   handleOnChange = value => {
-    const valid = value > 0;
+    const valid = value.length > 0;
     this.setState({
       valid
     });
@@ -89,7 +90,7 @@ class StyledInput extends Component {
     const { render } = this.props;
     return (
       <Group>
-        {render({ onChange: this.handleOnChange, componentWrapper: Input })}
+        {render({ onChange: this.handleOnChange, inputComponent: Input })}
         <Bar />
         <Label valid={this.state.valid}>Phone Number</Label>
       </Group>
@@ -101,6 +102,10 @@ StyledInput.defaultProps = {
   valid: false,
   label: "Enter text here",
   refCallback: () => {}
+};
+
+StyledInput.propTypes = {
+  render: PropTypes.func
 };
 
 export default StyledInput;
