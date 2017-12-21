@@ -2,11 +2,12 @@ import React from "react";
 
 import { storiesOf } from "@storybook/react";
 
-import PhoneInput from "../src";
+import PhoneInput, { normalize, format } from "../src";
 import StyledInput from "../demo/styledInput";
-
+import UtilityFunctions from "../demo/utilityFunctions";
 storiesOf("PhoneInput", module)
-  .add("with styled wrapper", () => (
+  .add("with styled component wrapper", () => (
     <StyledInput render={props => <PhoneInput {...props} />} />
   ))
-  .add("no wrapper", () => <PhoneInput />);
+  .add("no wrapper", () => <PhoneInput />)
+  .add("normalize/format utility functions", () => <UtilityFunctions />);

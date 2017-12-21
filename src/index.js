@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import type { PhoneInputType } from "./phoneInput";
-import { update, isInvalidKey } from "./phoneInput";
+import { update, isInvalidKey, format, normalize } from "./phoneInput";
 
 class PhoneInput extends Component {
   state = {
@@ -77,4 +77,5 @@ PhoneInput.defaultProps = {
   onChange: () => {}
 };
 
+export { format, normalize };
 export default PhoneInput;
