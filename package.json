@@ -1,6 +1,6 @@
 {
   "name": "react-phone-input-auto-format",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Auto formatting phone input React component, US only",
   "repository": {
     "type": "git",
@@ -12,7 +12,7 @@
     "flow": "flow",
     "build": "npm run lint && npm run flow && npm run test && webpack",
     "lint": "eslint ./src",
-    "publish": "npm run build && npm publish",
+    "publish:npm": "npm run build && npm publish",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "deploy-storybook": "storybook-to-ghpages"
