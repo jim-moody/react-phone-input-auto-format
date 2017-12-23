@@ -38,13 +38,20 @@ class PhoneInput extends Component {
   };
 
   componentDidUpdate() {
-    window.requestAnimationFrame(() => {
-      const { cursorPosition } = this.state;
-
-      if (this.textInput) {
-        this.textInput.setSelectionRange(cursorPosition, cursorPosition);
+    const { cursorPosition } = this.state;
+    if (this.textInput) {
+      // for some reason on non-chrome browsers, the cursor jumps to the end of input
+      // even after running requestAnimationFrame so we had to implement a setTimeout for those browsers
+      // even though the correct implementation would be requestAnimationFrame
+      if (navigator.userAgent.search("Chrome") > 0) {
+        window.requestAnimationFrame(() => {
+          this.textInput.setSelectionRange(cursorPosition, cursorPosition);
+        });
       }
-    });
+      setTimeout(() => {
+        this.textInput.setSelectionRange(cursorPosition, cursorPosition);
+      }, 20);
+    }
   }
 
   render() {

@@ -40,6 +40,7 @@ const Input = styled.input`
   display: block;
   width: 300px;
   border: none;
+  border-radius: 0;
   border-bottom: 1px solid #757575;
 
   &:focus {
