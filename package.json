@@ -1,22 +1,34 @@
 {
   "name": "react-phone-input-auto-format",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Auto formatting phone input React component, US only",
   "repository": {
     "type": "git",
     "url": "https://github.com/jim-moody/react-phone-input-auto-format"
   },
   "main": "lib/index.js",
+  "files": [
+    "lib"
+  ],
   "scripts": {
     "test": "jest",
     "flow": "flow",
     "build": "npm run lint && npm run flow && npm run test && webpack",
     "lint": "eslint ./src",
-    "publish:npm": "npm run build && npm publish",
+    "prepublish": "npm run build",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "deploy-storybook": "storybook-to-ghpages"
   },
+  "peerDependencies": {
+    "react": ">=15.3.0",
+    "react-dom": ">=15.3.0"
+  },
+  "keywords": [
+    "react",
+    "phone input",
+    "auto format"
+  ],
   "author": "Jim Moody <jimsmoody@gmail.com>",
   "license": "ISC",
   "homepage": "https://github.com/jim-moody/react-phone-input-auto-format",
@@ -41,14 +53,14 @@
     "eslint-plugin-react": "^7.5.1",
     "flow-bin": "^0.61.0",
     "jest": "^22.0.0",
-    "prop-types": "^15.6.0"
+    "babel-core": "^6.26.0",
+    "styled-components": "^2.3.2",
+    "babel-loader": "^7.1.2",
+    "prop-types": "^15.6.0",
+    "webpack": "^3.10.0"
   },
   "dependencies": {
-    "babel-core": "^6.26.0",
-    "babel-loader": "^7.1.2",
     "react": "^16.2.0",
-    "react-dom": "^16.2.0",
-    "styled-components": "^2.3.2",
-    "webpack": "^3.10.0"
+    "react-dom": "^16.2.0"
   }
 }
