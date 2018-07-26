@@ -5,7 +5,7 @@ import { update, isInvalidKey, format, normalize } from "./phoneInput";
 
 class PhoneInput extends Component {
   state = {
-    phoneNumber: "",
+    phoneNumber: this.props.value ? format(this.props.value) : "",
     cursorPosition: 0,
     key: ""
   };
@@ -37,6 +37,16 @@ class PhoneInput extends Component {
     this.props.onChange(phoneNumber);
   };
 
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    if (this.props.value !== nextProps.value) {
+      this.setState({
+        phoneNumber: format(nextProps.value),
+        cursorPosition: 0,
+        key: ""
+      });
+    }
+  }
+
   componentDidUpdate() {
     const { cursorPosition } = this.state;
     if (this.textInput) {
@@ -65,7 +75,7 @@ class PhoneInput extends Component {
       type: "tel",
       value: phoneNumber,
       onKeyDown: this.handleKeyDown,
-      onChange: () => {}
+      onChange: () => { }
     };
 
     return Input ? <Input {...props} /> : <input {...props} />;
@@ -77,11 +87,12 @@ PhoneInput.propTypes = {
     PropTypes.instanceOf(Component),
     PropTypes.func
   ]),
-  onChange: PropTypes.func
+  onChange: PropTypes.func,
+  value: PropTypes.string
 };
 
 PhoneInput.defaultProps = {
-  onChange: () => {}
+  onChange: () => { }
 };
 
 export { format, normalize };
