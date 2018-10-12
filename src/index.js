@@ -56,14 +56,14 @@ class PhoneInput extends Component {
 
   render() {
     const { phoneNumber } = this.state;
-    const { inputComponent: Input } = this.props;
+    const { inputComponent: Input, value } = this.props;
     const refProp = Input ? "innerRef" : "ref";
 
     const props = {
       ...this.props,
       [refProp]: input => (this.textInput = input),
       type: "tel",
-      value: phoneNumber,
+      value: value ? value : phoneNumber,
       onKeyDown: this.handleKeyDown,
       onChange: () => {}
     };
@@ -77,7 +77,8 @@ PhoneInput.propTypes = {
     PropTypes.instanceOf(Component),
     PropTypes.func
   ]),
-  onChange: PropTypes.func
+  onChange: PropTypes.func,
+  value: PropTypes.string
 };
 
 PhoneInput.defaultProps = {
