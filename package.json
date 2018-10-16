@@ -1,6 +1,6 @@
 {
   "name": "react-phone-input-auto-format",
-  "version": "0.0.6",
+  "version": "0.1.0",
   "description": "Auto formatting phone input React component, US only",
   "repository": {
     "type": "git",
