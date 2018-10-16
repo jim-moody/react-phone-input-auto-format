@@ -10,4 +10,5 @@ storiesOf("PhoneInput", module)
     <StyledInput render={props => <PhoneInput {...props} />} />
   ))
   .add("no wrapper", () => <PhoneInput />)
-  .add("normalize/format utility functions", () => <UtilityFunctions />);
+  .add("normalize/format utility functions", () => <UtilityFunctions />)
+  .add("with initial value", () => <PhoneInput value="2562433434" />);
