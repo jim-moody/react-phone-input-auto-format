@@ -8,8 +8,8 @@ Also exposes utility functions to normalize and format the phone number.
 
 Pros:
 
-* United States only (if you are only dealing with US numbers)
-* Easily integrates with styled components
+- United States only (if you are only dealing with US numbers)
+- Easily integrates with styled components
 
 ![Phone Input Video](https://media.giphy.com/media/xULW8JUzLEJL5Gjf4A/giphy.gif)
 
@@ -88,6 +88,7 @@ export default Input;
 | name           | type            | description                                                                 |
 | -------------- | --------------- | --------------------------------------------------------------------------- |
 | onChange       | function        | Returns the value of the input field                                        |
+| value          | string          | Can set a default and / or custom value if desired                          |
 | inputComponent | React Component | Will be used as the input if given, otherwise will use a default HTML input |
 
 Other properties (not documented) are applied to the root element.
